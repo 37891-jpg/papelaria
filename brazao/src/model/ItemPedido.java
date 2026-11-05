@@ -1,0 +1,63 @@
+
+package model;
+
+public class ItemPedido {
+
+    private static final double DESCONTO_KIT = 0.15;
+    private static final double DESCONTO_QUANTIDADE = 0.08;
+    private static final int QUANTIDADE_MINIMA_DESCONTO = 10;
+    private static final double ZERO = 0.0;
+
+    private static final String FORMATO_LINHA =
+            "%-20s %3d un | bruto R$ %7.2f | desc R$ %6.2f | R$ %7.2f%n";
+
+  
+    private String descricao;
+    private double valorUnitario;
+    private int quantidade;
+    private boolean kit;
+
+   
+    public ItemPedido(String descricao, double valorUnitario,
+                      int quantidade, boolean kit) {
+        this.descricao = descricao;
+        this.valorUnitario = valorUnitario;
+        this.quantidade = quantidade;
+        this.kit = kit;
+    }
+
+    
+    public double calcularValorBruto() {
+        return valorUnitario * quantidade;
+    }
+
+
+    public double calcularDesconto() {
+        double bruto = calcularValorBruto();
+
+        if (kit) {
+            return bruto * DESCONTO_KIT;
+        } else if (quantidade >= QUANTIDADE_MINIMA_DESCONTO) {
+            return bruto * DESCONTO_QUANTIDADE;
+        }
+
+        return ZERO;
+    }
+
+
+    public double calcularValorLiquido() {
+        return calcularValorBruto() - calcularDesconto();
+    }
+
+
+    public void exibirLinha() {
+        System.out.printf(
+                FORMATO_LINHA,
+                descricao,
+                quantidade,
+                calcularValorBruto(),
+                calcularDesconto(),
+                calcularValorLiquido()
+        );
+    }
+}
